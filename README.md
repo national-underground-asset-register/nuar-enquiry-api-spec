@@ -9,7 +9,7 @@ The purpose of publishing this specification is to illustrate the key data requi
 ## Contents
 
 - **README.md** - this README file
-- **[ProposedWorksEnquiry_OpenAPI.html](ProposedWorksEnquiry_OpenAPI.html)** - an interactive local web page documenting the endpoints of the API including details of parameters and responses
+- **[ProposedWorksEnquiry_OpenAPI.html](ProposedWorksEnquiry_OpenAPI.html)** - an interactive downloadable web page documenting the endpoints of the API including details of parameters and responses
 - **[ProposedWorksEnquiry_OpenAPI.json](ProposedWorksEnquiry_OpenAPI.json)** - the OpenAPI specification in json format
 - **[ProposedWorksEnquiry_OpenAPI.yaml](ProposedWorksEnquiry_OpenAPI.yaml)** - the OpenAPI specification in yaml format
 
