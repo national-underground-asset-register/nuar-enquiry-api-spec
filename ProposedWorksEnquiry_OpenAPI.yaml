@@ -3,7 +3,7 @@ servers:
   - url: TBC
 info:
   title: Proposed Works Enquiry API
-  version: 1.0.0
+  version: 1.0.1
   description: A specification for an API that allows details of proposed works at various project phases to be received in order for asset owners (or their service providers) to receive notification of potential works in order to carry out risk assessments and prioritise operational activities to reduce the risk of damage to assets
   license: 
     name: Open Government Licence
@@ -599,6 +599,9 @@ components:
     Rule:
       type: object
       properties:
+        organisationDetails:
+          $ref: '#/components/schemas/OrganisationDetails'
+          description: "Details of the organisation for which a rule was triggered"
         ruleID:
           type: string
           format: uuid
