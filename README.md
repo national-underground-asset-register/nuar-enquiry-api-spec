@@ -1,5 +1,5 @@
 # NUAR Proposed Works Enquiry API
-## V1.0.0
+## V1.0.1
 
 This is an OpenAPI specification for an API that allows details of proposed works at various project phases to be received, stored and acted upon. This would allow asset owners (or their service providers) to receive notifications of potential works in order, for example, to carry out risk assessments and prioritise operational activities to reduce the risk of damage to assets.
 
