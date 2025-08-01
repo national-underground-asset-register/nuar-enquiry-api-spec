@@ -1,0 +1,1031 @@
+{
+  "openapi": "3.0.3",
+  "servers": [
+    {
+      "url": "TBC"
+    }
+  ],
+  "info": {
+    "title": "Proposed Works Enquiry API",
+    "version": "1.0.1",
+    "description": "A specification for an API that allows details of proposed works at various project phases to be received in order for asset owners (or their service providers) to receive notification of potential works in order to carry out risk assessments and prioritise operational activities to reduce the risk of damage to assets",
+    "license": {
+      "name": "Open Government Licence",
+      "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+    }
+  },
+  "paths": {
+    "/enquiries": {
+      "get": {
+        "operationId": "getEnquiries",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "List all enquiries",
+        "description": "List all the enquiries that have previously been submitted from the source application",
+        "responses": {
+          "200": {
+            "description": "A list of enquiries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Enquiry"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Enquiries not found"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createEnquiry",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "Submit a new enquiry",
+        "description": "Allow a new enquiry to be submitted from the source application",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnquirySubmit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Enquiry created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Enquiry"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Enquiries not found"
+          }
+        }
+      }
+    },
+    "/enquiries/{sourceEnquiryID}": {
+      "get": {
+        "operationId": "getEnquiry",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "Get an enquiry by source application ID",
+        "description": "Get details of the enquiry with the specified ID in the source application",
+        "parameters": [
+          {
+            "name": "sourceEnquiryID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Enquiry details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Enquiry"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Enquiry not found"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateEnquiry",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "Update an enquiry based on its source application ID",
+        "description": "Update the details of the enquiry with the specified ID in the source application",
+        "parameters": [
+          {
+            "name": "sourceEnquiryID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnquirySubmit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Enquiry updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Enquiry"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Enquiry not found"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteEnquiry",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "Delete an enquiry based on its source application ID",
+        "description": "Delete or archive the enquiry with the specified ID in the source application",
+        "parameters": [
+          {
+            "name": "sourceEnquiryID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Enquiry deleted successfully"
+          },
+          "404": {
+            "description": "Enquiry not found"
+          }
+        }
+      }
+    },
+    "/enquiries/users/{userID}": {
+      "get": {
+        "operationId": "getEnquiriesForUser",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "List all enquiries submitted by a user in the source application",
+        "description": "List all the enquiries submitted by the user with the specified ID in the source application",
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of enquiries submitted by the specified user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Enquiry"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No enquiries found for the specified user"
+          }
+        }
+      }
+    },
+    "/enquiries/users/{userID}/status/{status}": {
+      "get": {
+        "operationId": "getEnquiriesForUserByStatus",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "List all enquiries with the specified status submitted by a user in the source system",
+        "description": "List all the enquiries with the specified status submitted by the user with the specified ID in the source application",
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of enquiries with the specified status submitted by the specified user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Enquiry"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No enquiries found with the specified status from the specified user"
+          }
+        }
+      }
+    },
+    "/enquiries/users/{userID}/crs/{crs}": {
+      "get": {
+        "operationId": "getEnquiriesForUserByCRS",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "List all enquiries with the specified CRS submitted by a user in the source system",
+        "description": "List all the enquiries with the specified Coordinate Reference System submitted by the user with the specified ID in the source application",
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "crs",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of enquiries with the specified Coordinate Reference System submitted by the specified user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Enquiry"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No enquiries found with the specified status from the specified user"
+          }
+        }
+      }
+    },
+    "/enquiries/status/{status}": {
+      "get": {
+        "operationId": "getEnquiriesByStatus",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "List all enquiries with the specified status",
+        "description": "List all enquiries with the specified status that have previously been submitted from the source application",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of enquiries with the specified status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Enquiry"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No enquiries found with the specified status"
+          }
+        }
+      }
+    },
+    "/enquiries/crs/{crs}": {
+      "get": {
+        "operationId": "getEnquiriesByCRS",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "List all enquiries with the specified CRS",
+        "description": "List all enquiries with the specified CRS that have previously been submitted from the source application",
+        "parameters": [
+          {
+            "name": "crs",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of enquiries with the specified CRS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Enquiry"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No enquiries found with the specified CRS"
+          }
+        }
+      }
+    },
+    "/enquiries/organisations": {
+      "get": {
+        "operationId": "getRegisteredOrganisations",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "List all organisations registered by the source application",
+        "description": "List the details of all the organisations that have been registered by the source application",
+        "responses": {
+          "200": {
+            "description": "A list of registered organisation details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganisationDetails"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organisations not found"
+          }
+        }
+      },
+      "post": {
+        "operationId": "registerOrganisation",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "Register a new organisation represented in the source application",
+        "description": "Register an organisation which is represented in the source application so that any instructions and updates for enquiries from specific organisations can be properly interpreted and reported by the source application",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganisationDetails"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Organisation created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organisations not found"
+          }
+        }
+      }
+    },
+    "/enquiries/organisations/{sourceOrganisationID}": {
+      "get": {
+        "operationId": "getRegisteredOrganisation",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "Get an organisation by its registered ID in the source application",
+        "description": "Get the details of the organisation with the specified ID in the source application",
+        "parameters": [
+          {
+            "name": "sourceOrganisationID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registered organisation details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organisation not found"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateRegisteredOrganisation",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "Update a registered organisation",
+        "description": "Update the details of the organisation with the specified ID that has been registered by the source application",
+        "parameters": [
+          {
+            "name": "sourceOrganisationID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganisationDetails"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Organisation updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organisation not found"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteRegisteredOrganisation",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "summary": "Deregister an organisation",
+        "description": "Deregister the organisation with the specified ID that has been registered by the source application",
+        "parameters": [
+          {
+            "name": "sourceOrganisationID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Organisation deregistered successfully"
+          },
+          "404": {
+            "description": "Organisation not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic",
+        "description": "BasicAuth is provided as an example. Suitable Security Schemes will need to be defined for each implementation"
+      }
+    },
+    "schemas": {
+      "EnquirySubmit": {
+        "type": "object",
+        "properties": {
+          "sourceEnquiryID": {
+            "title": "Enquiry ID",
+            "description": "The Unique identifer of the enquiry in the source system",
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectName": {
+            "type": "string",
+            "maxLength": 250,
+            "nullable": true,
+            "description": "The name of any project of which the enquiry is part"
+          },
+          "enquiryTitle": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "The name or title of this enquiry"
+          },
+          "enquiryReference": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "The reference of this enquiry"
+          },
+          "enquiryPhase": {
+            "$ref": "#/components/schemas/EnquiryPhase",
+            "description": "The phase of the project at which the enquiry is being made, taken from an enumerated list of possible values"
+          },
+          "isEmergency": {
+            "type": "boolean",
+            "default": false,
+            "description": "An indication of whether the works in question are emergency works necessitating a fast response"
+          },
+          "enquirerDetails": {
+            "$ref": "#/components/schemas/EnquirerDetails",
+            "description": "The details of the user in the source application who is submitting the enquiry, including contact information passed on from the source application"
+          },
+          "enquiryDescription": {
+            "type": "string",
+            "description": "A description of the project and the works being planned along with any other pertinent descriptive information"
+          },
+          "additionalInformation": {
+            "type": "string",
+            "nullable": true,
+            "description": "Any additional information which may be of use to those assessing the works and their impact on their assets. This may include: onsite contact details, details and dimensions of any structures being constructed, details of site ingress and egress which may involve heavy plant etc."
+          },
+          "enquiryLocation": {
+            "type": "object",
+            "description": "A GeoJSON geometry object representing the location, extent or route of the proposed works"
+          },
+          "locationGeometryCRS": {
+            "type": "string",
+            "default": "27700",
+            "description": "The coordinate reference system of the geometry used to specify the work location. Specified as the numeric part of the EPSG reference"
+          },
+          "dateTimeCreated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time on which the enquiry was created"
+          },
+          "activityStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The start date for any proposed works. This may be an estimate if the planning is in its early stages"
+          },
+          "activityEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "activityType": {
+            "$ref": "#/components/schemas/ActivityType",
+            "description": "An indication of the primary type of activity being planned, taken from an enumerated list of possible values"
+          },
+          "rulesTriggered": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Rule"
+            },
+            "description": "Details of the rules that have been triggered in order for this notification to be raised"
+          }
+        },
+        "required": [
+          "enquiryTitle",
+          "enquiryReference",
+          "enquiryPhase",
+          "enquirerDetails",
+          "enquiryDescription",
+          "enquiryLocation",
+          "dateTimeCreated",
+          "activityStartDate",
+          "activityType"
+        ]
+      },
+      "Enquiry": {
+        "type": "object",
+        "properties": {
+          "sourceEnquiryID": {
+            "title": "Enquiry ID",
+            "description": "The Unique identifer of the enquiry in the source system",
+            "type": "string",
+            "format": "uuid"
+          },
+          "targetEnquiryID": {
+            "title": "Enquiry ID",
+            "description": "The Unique identifer of the enquiry in the target system",
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectName": {
+            "type": "string",
+            "maxLength": 250,
+            "nullable": true,
+            "description": "The name of any project of which the enquiry is part"
+          },
+          "enquiryTitle": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "The name or title of this enquiry"
+          },
+          "enquiryReference": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "The reference of this enquiry"
+          },
+          "enquiryPhase": {
+            "$ref": "#/components/schemas/EnquiryPhase",
+            "description": "The phase of the project at which the enquiry is being made, taken from an enumerated list of possible values"
+          },
+          "isEmergency": {
+            "type": "boolean",
+            "default": false,
+            "description": "An indication of whether the works in question are emergency works necessitating a fast response"
+          },
+          "enquirerDetails": {
+            "$ref": "#/components/schemas/EnquirerDetails",
+            "description": "The details of the user in the source application who is submitting the enquiry, including contact information passed on from the source application"
+          },
+          "enquiryDescription": {
+            "type": "string",
+            "description": "A description of the project and the works being planned along with any other pertinent descriptive information"
+          },
+          "additionalInformation": {
+            "type": "string",
+            "nullable": true,
+            "description": "Any additional information which may be of use to those assessing the works and their impact on their assets. This may include: onsite contact details, details and dimensions of any structures being constructed, details of site ingress and egress which may involve heavy plant etc."
+          },
+          "enquiryLocation": {
+            "type": "object",
+            "description": "A GeoJSON geometry object representing the location, extent or route of the proposed works"
+          },
+          "locationGeometryCRS": {
+            "type": "string",
+            "description": "The coordinate reference system of the geometry used to specify the work location. Specified as the numeric part of the EPSG reference"
+          },
+          "dateTimeCreated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time on which the enquiry was created"
+          },
+          "activityStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The start date for any proposed works. This may be an estimate if the planning is in its early stages"
+          },
+          "activityEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "The anticipated end date for any proposed works. This may be an estimate if the planning is in its early stages"
+          },
+          "activityType": {
+            "$ref": "#/components/schemas/ActivityType",
+            "description": "An indication of the primary type of activity being planned, taken from an enumerated list of possible values"
+          },
+          "rulesTriggered": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Rule"
+            },
+            "description": "Details of the rules that have been triggered in order for this notification to be raised"
+          },
+          "activityTypeBeingAssessed": {
+            "type": "string",
+            "nullable": true,
+            "description": "If the target system has a different set of Activity Types to the enumerated list, this value represents the internal activity type to which the input value has been mapped for assessment. If the input and underlying activity types match, this value should be empty"
+          },
+          "organisationResponses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganisationResponse"
+            },
+            "description": "A collection of responses from different organisations who may be assessing the enquiry with respect to their assets. These responses include an indication of status with respect to that organisation, along with any instructions from that organisation, and one or more dated notes for custom instructions and questions"
+          },
+          "overallStatus": {
+            "$ref": "#/components/schemas/Status",
+            "description": "An indication of the current status of the enquiry as a whole, taken from an enumerated list of possible values"
+          }
+        },
+        "required": [
+          "enquiryID",
+          "enquiryTitle",
+          "enquiryReference",
+          "enquiryPhase",
+          "enquirerDetails",
+          "enquiryDescription",
+          "enquiryLocation",
+          "locationGeometryCRS",
+          "dateTimeCreated",
+          "activityStartDate",
+          "activityType",
+          "overallStatus"
+        ]
+      },
+      "EnquirerDetails": {
+        "type": "object",
+        "properties": {
+          "sourceEnquirerUserID": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the enquirer in the source application"
+          },
+          "enquirerFullName": {
+            "type": "string",
+            "maxLength": 250,
+            "nullable": true,
+            "description": "The full name of the enquirer in the source application"
+          },
+          "enquirerOrganisationName": {
+            "type": "string",
+            "maxLength": 250,
+            "nullable": true,
+            "description": "The name of the enquirer's organisation in the source application"
+          },
+          "enquirerEmailAddress": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "- The email address of the person submitting the enquiry\n- Valid email address format\n- Example: example@example.com\n"
+          },
+          "enquirerTelephoneNumber": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "The telephone number of the enquirer"
+          }
+        },
+        "required": [
+          "sourceEnquirerUserID",
+          "enquirerEmailAddress",
+          "enquirerTelephoneNumber"
+        ]
+      },
+      "OrganisationDetails": {
+        "type": "object",
+        "properties": {
+          "sourceOrganisationID": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the organisation in the source application"
+          },
+          "organisationName": {
+            "type": "string",
+            "maxLength": 250,
+            "description": "The name of the organisation in the source application"
+          }
+        },
+        "required": [
+          "sourceOrganisationID",
+          "organisationName"
+        ]
+      },
+      "Rule": {
+        "type": "object",
+        "properties": {
+          "organisationDetails": {
+            "$ref": "#/components/schemas/OrganisationDetails",
+            "description": "Details of the organisation for which a rule was triggered"
+          },
+          "ruleID": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier of the rule that has been triggered to raise this notification"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the rule that has been triggered to raise this notification"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the rule that has been triggered to raise this notification"
+          },
+          "proximityString": {
+            "type": "string",
+            "description": "The proximity between the enquiry Area of Interest and assets or sites that caused this rule to be triggered"
+          },
+          "enhancedMeasures": {
+            "type": "string",
+            "description": "A description of the enhanced measures in place until this notification is marked as closed"
+          }
+        }
+      },
+      "OrganisationResponse": {
+        "type": "object",
+        "properties": {
+          "organisationID": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the organisation in the source application"
+          },
+          "organisationName": {
+            "type": "string",
+            "maxLength": 250,
+            "description": "The name of the organisation in the source application"
+          },
+          "instructionfromOrganisation": {
+            "$ref": "#/components/schemas/Instruction",
+            "description": "Any instructions from this organisation regarding the proposed works, taken from an enumerated list of possible values"
+          },
+          "enquiryStatusForOrganisation": {
+            "$ref": "#/components/schemas/Status",
+            "description": "The status of the enquiry from the perspective of this organisation, taken from an enumerated list of possible values"
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganisationNotes"
+            },
+            "description": "Dated notes from this organisation with respect to the enquiry or proposed works, including custom instructions and questions"
+          }
+        },
+        "required": [
+          "organisationID",
+          "organisationName"
+        ]
+      },
+      "OrganisationNotes": {
+        "type": "object",
+        "properties": {
+          "note": {
+            "type": "string",
+            "description": "A note from this organisation with respect to the enquiry or proposed works, including custom instructions and questions"
+          },
+          "dateOfNote": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time at which the note was posted"
+          }
+        }
+      },
+      "EnquiryPhase": {
+        "description": "An enumeration of possible project phases for which the enquiry is being made",
+        "type": "string",
+        "enum": [
+          "Information only",
+          "Design or feasibility",
+          "Planned works",
+          "Reactive works"
+        ]
+      },
+      "Status": {
+        "description": "An enumeration of possible status values for the enquiry",
+        "type": "string",
+        "enum": [
+          "Submitted",
+          "In Progress",
+          "Completed",
+          "Withdrawn"
+        ]
+      },
+      "Instruction": {
+        "description": "An enumeration of possible instructions from an organisation with respect to the enquiry or proposed works",
+        "type": "string",
+        "enum": [
+          "Do not proceed while assessment is underway",
+          "Do not proceed pending further communication",
+          "Further information required",
+          "Proceed with caution"
+        ]
+      },
+      "ActivityType": {
+        "description": "An enumeration of possible activity types which may be planned or proposed",
+        "type": "string",
+        "enum": [
+          "Bank works",
+          "Blasting",
+          "Building construction",
+          "Cranes / work platforms",
+          "Demolition (explosives)",
+          "Demolition (no explosives)",
+          "Ditch works",
+          "Dredging",
+          "Drop kerb",
+          "Fencing",
+          "Field drainage",
+          "Gulley works",
+          "Horizontal drilling / moling / tunnelling / pipe jacking",
+          "Hot works",
+          "Installation of buried services",
+          "Landfilling",
+          "Landscaping",
+          "Mast site",
+          "Multiple excavations site (1.5m or shallower)",
+          "Multiple excavations site (deeper than 1.5m)",
+          "Other",
+          "Piling",
+          "Pole works",
+          "Preliminary enquiry",
+          "Pressure testing",
+          "Private services",
+          "Resurfacing",
+          "Road / track construction",
+          "Seismic survey",
+          "Single excavation site (1.5m or shallower)",
+          "Single excavation site (deeper than 1.5m)",
+          "Site survey (non-invasive)",
+          "Solar farm",
+          "Street furniture",
+          "Traffic calming",
+          "Tree planting",
+          "Tree removal",
+          "Trial holes",
+          "Wind farm",
+          "Works to alter the ground level",
+          "Works to alter the water level"
+        ]
+      }
+    }
+  }
+}
